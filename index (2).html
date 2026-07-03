@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sankalp — Graphic Designer &amp; Video Editor</title>
+<meta name="description" content="Sankalp — freelance graphic designer &amp; video editor based in Pune. Thumbnails, social creatives, logo design, video editing, VFX &amp; 3D.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================= TOKENS ============================= */
+:root{
+  --bg:#08080a;
+  --bg-1:#0e0e11;
+  --panel:#131316;
+  --panel-2:#19191d;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.16);
+  --text:#f4f2ec;
+  --text-dim:#9a9aa1;
+  --text-dimmer:#5c5c62;
+  --accent:#ff5a1f;
+  --accent-2:#ffb35a;
+  --accent-soft:rgba(255,90,31,.12);
+  --accent-line:rgba(255,90,31,.35);
+  --radius:14px;
+  --font-d:'Space Grotesk',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.16,.84,.44,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-d);
+  line-height:1.5;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img,video{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+::selection{background:var(--accent);color:#0a0a0a}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.wrap{padding:0 20px}}
+
+.eyebrow{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font-m);font-size:.72rem;letter-spacing:.18em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:18px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.eyebrow .tc{color:var(--text-dimmer);margin-left:auto;letter-spacing:.05em}
+
+h2.title{
+  font-size:clamp(2rem,4.6vw,3.4rem);
+  font-weight:600;letter-spacing:-.02em;line-height:1.05;margin-bottom:14px;
+}
+.lede{color:var(--text-dim);font-size:1.02rem;max-width:560px;font-weight:300}
+
+section{position:relative;padding:120px 0}
+@media(max-width:780px){section{padding:80px 0}}
+
+/* ============================= GRAIN / NOISE ============================= */
+.grain{
+  position:fixed;inset:0;z-index:40;pointer-events:none;
+  opacity:.05;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation:grain 8s steps(8) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-1%,-2%)}
+  20%{transform:translate(-3%,1%)}30%{transform:translate(2%,-3%)}
+  40%{transform:translate(-2%,3%)}50%{transform:translate(3%,1%)}
+  60%{transform:translate(-1%,2%)}70%{transform:translate(1%,-1%)}
+  80%{transform:translate(-3%,-2%)}90%{transform:translate(2%,2%)}
+}
+
+/* ============================= TIMELINE SCRUBBER (signature) ============================= */
+#timeline{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(8,8,10,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.tl-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;padding:0 24px;
+}
+.tl-logo{font-family:var(--font-m);font-weight:700;font-size:.95rem;letter-spacing:.02em}
+.tl-logo span{color:var(--accent)}
+.tl-mid{display:flex;align-items:center;gap:26px}
+.tl-links{display:flex;gap:22px;font-family:var(--font-m);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+.tl-links a{position:relative;padding-bottom:3px;transition:color .25s var(--ease)}
+.tl-links a:hover,.tl-links a.active{color:var(--text)}
+.tl-links a.active::after{content:'';position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent)}
+.tl-rec{display:flex;align-items:center;gap:8px;font-family:var(--font-m);font-size:.72rem;letter-spacing:.1em;color:var(--text-dim)}
+.tl-rec i{width:8px;height:8px;border-radius:50%;background:#ff3b30;animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.tl-tc{font-family:var(--font-m);font-size:.78rem;color:var(--text-dim);letter-spacing:.04em;min-width:118px;text-align:right}
+.tl-tc b{color:var(--accent-2);font-weight:500}
+.tl-burger{display:none;width:34px;height:34px;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px}
+.tl-burger span,.tl-burger span::before,.tl-burger span::after{content:'';display:block;width:16px;height:1.5px;background:var(--text);position:relative;transition:.25s}
+.tl-burger span::before{position:absolute;top:-5px}
+.tl-burger span::after{position:absolute;top:5px}
+
+.tl-track{position:relative;height:34px;padding:0 24px;display:flex;align-items:center}
+.tl-track .rail{position:relative;width:100%;height:3px;background:var(--line-strong);border-radius:2px;overflow:visible}
+.tl-track .fill{position:absolute;left:0;top:0;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:2px}
+.tl-track .head{position:absolute;top:50%;left:0%;width:12px;height:12px;background:var(--accent-2);border-radius:2px;transform:translate(-50%,-50%) rotate(45deg);box-shadow:0 0 10px var(--accent)}
+.tl-marker{position:absolute;top:-11px;width:1px;height:28px;background:var(--line-strong);cursor:pointer}
+.tl-marker span{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:.58rem;letter-spacing:.06em;color:var(--text-dimmer);white-space:nowrap;opacity:0;transition:opacity .2s}
+.tl-marker:hover span{opacity:1;color:var(--accent-2)}
+
+@media(max-width:900px){
+  .tl-links{display:none}
+  .tl-burger{display:flex}
+}
+@media(max-width:640px){
+  .tl-tc{display:none}
+  .tl-track{padding:0 20px}
+}
+
+/* mobile menu */
+#mobile-menu{
+  position:fixed;inset:0;z-index:90;background:rgba(8,8,10,.98);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:26px;padding:40px;
+  transform:translateY(-100%);transition:transform .4s var(--ease);
+}
+#mobile-menu.open{transform:translateY(0)}
+#mobile-menu a{font-family:var(--font-d);font-size:1.8rem;font-weight:600;color:var(--text-dim)}
+#mobile-menu a:hover{color:var(--accent)}
+#mobile-menu .mm-close{position:absolute;top:20px;right:24px;font-family:var(--font-m);font-size:.75rem;color:var(--text-dim);letter-spacing:.1em}
+
+/* ============================= HERO ============================= */
+#hero{
+  min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:130px;position:relative;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.scanlines{
+  position:absolute;inset:-20% -20%;
+  background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);
+  animation:scan 9s linear infinite;
+}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+.hero-glow{position:absolute;width:70vw;height:70vw;max-width:900px;max-height:900px;
+  background:radial-gradient(circle,var(--accent-soft) 0%,transparent 65%);
+  top:-20%;right:-15%;filter:blur(10px);
+}
+.meter{position:absolute;right:6%;bottom:14%;display:flex;gap:5px;align-items:flex-end;height:120px;opacity:.55}
+.meter i{width:4px;background:linear-gradient(180deg,var(--accent-2),var(--accent));border-radius:2px;animation:meter 1.6s ease-in-out infinite}
+.meter i:nth-child(1){height:30%;animation-delay:.1s}
+.meter i:nth-child(2){height:60%;animation-delay:.3s}
+.meter i:nth-child(3){height:40%;animation-delay:.05s}
+.meter i:nth-child(4){height:90%;animation-delay:.4s}
+.meter i:nth-child(5){height:55%;animation-delay:.2s}
+.meter i:nth-child(6){height:75%;animation-delay:.15s}
+.meter i:nth-child(7){height:35%;animation-delay:.35s}
+.meter i:nth-child(8){height:65%;animation-delay:.25s}
+@keyframes meter{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@media(max-width:780px){.meter{display:none}}
+
+.frame-corners{position:absolute;inset:24px;pointer-events:none;z-index:2}
+.frame-corners i{position:absolute;width:22px;height:22px;border-color:var(--line-strong)}
+.frame-corners i:nth-child(1){top:0;left:0;border-top:1px solid;border-left:1px solid}
+.frame-corners i:nth-child(2){top:0;right:0;border-top:1px solid;border-right:1px solid}
+.frame-corners i:nth-child(3){bottom:0;left:0;border-bottom:1px solid;border-left:1px solid}
+.frame-corners i:nth-child(4){bottom:0;right:0;border-bottom:1px solid;border-right:1px solid}
+
+.hero-inner{position:relative;z-index:3}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 10px;
+  border:1px solid var(--line-strong);border-radius:100px;
+  font-family:var(--font-m);font-size:.7rem;letter-spacing:.1em;color:var(--text-dim);
+  margin-bottom:34px;text-transform:uppercase;
+}
+.hero-eyebrow i{width:6px;height:6px;border-radius:50%;background:#3ddc6a;box-shadow:0 0 6px #3ddc6a}
+
+h1.headline{
+  font-size:clamp(2.6rem,8vw,6.6rem);
+  font-weight:700;letter-spacing:-.03em;line-height:.98;
+  text-transform:uppercase;
+}
+h1.headline .line{display:block;overflow:hidden}
+h1.headline .line span{display:inline-block;animation:riseIn .9s var(--ease) both}
+h1.headline .line:nth-child(1) span{animation-delay:.05s}
+h1.headline .line:nth-child(2) span{animation-delay:.18s;color:transparent;-webkit-text-stroke:1.5px var(--text)}
+@keyframes riseIn{from{transform:translateY(110%)}to{transform:translateY(0)}}
+
+.hero-sub{margin-top:30px;max-width:520px;color:var(--text-dim);font-size:1.08rem;font-weight:300}
+.hero-ctas{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:100px;
+  font-family:var(--font-m);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
+  transition:transform .35s var(--ease),background .35s,border-color .35s,box-shadow .35s;
+  cursor:pointer;
+}
+.btn-primary{background:var(--accent);color:#0a0a0a;font-weight:600;box-shadow:0 0 0 0 rgba(255,90,31,.5)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 30px -8px rgba(255,90,31,.65)}
+.btn-outline{border:1px solid var(--line-strong);color:var(--text)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent-2);transform:translateY(-3px)}
+.btn svg{width:15px;height:15px}
+
+.hero-stats{display:flex;gap:40px;margin-top:80px;flex-wrap:wrap}
+.hero-stats div b{display:block;font-size:1.6rem;font-weight:600;color:var(--text)}
+.hero-stats div span{font-family:var(--font-m);font-size:.68rem;letter-spacing:.08em;color:var(--text-dimmer);text-transform:uppercase}
+
+.scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:3}
+.scroll-cue .bar{width:1px;height:36px;background:linear-gradient(180deg,var(--accent),transparent);animation:cue 1.8s ease-in-out infinite}
+@keyframes cue{0%{opacity:0;transform:scaleY(.3);transform-origin:top}50%{opacity:1;transform:scaleY(1);transform-origin:top}100%{opacity:0;transform:scaleY(.3);transform-origin:bottom}}
+.scroll-cue span{font-family:var(--font-m);font-size:.62rem;color:var(--text-dimmer);letter-spacing:.15em}
+@media(max-width:780px){.scroll-cue{display:none}}
+
+/* ============================= REVEAL ============================= */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.stagger > *{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.stagger.in > *{opacity:1;transform:translateY(0)}
+.stagger.in > *:nth-child(1){transition-delay:.03s}
+.stagger.in > *:nth-child(2){transition-delay:.09s}
+.stagger.in > *:nth-child(3){transition-delay:.15s}
+.stagger.in > *:nth-child(4){transition-delay:.21s}
+.stagger.in > *:nth-child(5){transition-delay:.27s}
+.stagger.in > *:nth-child(6){transition-delay:.33s}
+
+/* ============================= ABOUT ============================= */
+#about{border-top:1px solid var(--line)}
+.about-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px;align-items:start;margin-top:50px}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:44px}}
+
+.viewfinder{position:relative;border:1px solid var(--line-strong);border-radius:var(--radius);aspect-ratio:4/5;
+  background:linear-gradient(155deg,var(--panel),var(--panel-2));overflow:hidden;
+}
+.viewfinder .vf-frame{position:absolute;inset:14px;border:1px solid var(--line);pointer-events:none;border-radius:6px}
+.viewfinder .vf-frame i{position:absolute;width:16px;height:16px}
+.viewfinder .vf-frame i:nth-child(1){top:-1px;left:-1px;border-top:1.5px solid var(--accent);border-left:1.5px solid var(--accent)}
+.viewfinder .vf-frame i:nth-child(2){top:-1px;right:-1px;border-top:1.5px solid var(--accent);border-right:1.5px solid var(--accent)}
+.viewfinder .vf-frame i:nth-child(3){bottom:-1px;left:-1px;border-bottom:1.5px solid var(--accent);border-left:1.5px solid var(--accent)}
+.viewfinder .vf-frame i:nth-child(4){bottom:-1px;right:-1px;border-bottom:1.5px solid var(--accent);border-right:1.5px solid var(--accent)}
+.viewfinder .vf-tag{position:absolute;top:26px;left:26px;font-family:var(--font-m);font-size:.65rem;color:#ff3b30;display:flex;align-items:center;gap:6px;letter-spacing:.08em}
+.viewfinder .vf-tag i{width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:blink 1.4s infinite}
+.viewfinder .vf-mono{position:absolute;bottom:26px;right:26px;font-family:var(--font-m);font-size:.62rem;color:var(--text-dimmer);letter-spacing:.06em;text-align:right}
+.viewfinder .vf-initials{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(4rem,10vw,7rem);font-weight:700;color:transparent;-webkit-text-stroke:1.5px var(--line-strong);letter-spacing:-.03em;
+}
+
+.about-text p{color:var(--text-dim);font-size:1.02rem;font-weight:300;margin-bottom:20px;max-width:640px}
+.about-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:40px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.about-facts div{background:var(--panel);padding:22px 20px}
+.about-facts div b{display:block;font-size:1.05rem;margin-bottom:4px}
+.about-facts div span{font-family:var(--font-m);font-size:.64rem;letter-spacing:.08em;color:var(--text-dimmer);text-transform:uppercase}
+@media(max-width:560px){.about-facts{grid-template-columns:1fr}}
+
+/* ============================= PORTFOLIO ============================= */
+#work{border-top:1px solid var(--line)}
+.work-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:44px}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filter-chip{
+  padding:9px 18px;border:1px solid var(--line-strong);border-radius:100px;
+  font-family:var(--font-m);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);
+  transition:all .3s var(--ease);
+}
+.filter-chip:hover{color:var(--text);border-color:var(--text-dim)}
+.filter-chip.active{background:var(--accent);border-color:var(--accent);color:#0a0a0a;font-weight:600}
+
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:980px){.work-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.work-grid{grid-template-columns:1fr}}
+
+.work-card{
+  position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;
+  border:1px solid var(--line);cursor:pointer;transition:transform .1s;
+}
+.work-card[data-cat]{transition:opacity .35s var(--ease),transform .45s var(--ease);}
+.work-card.hide{display:none}
+.wc-bg{position:absolute;inset:0;transition:transform .6s var(--ease)}
+.work-card:hover .wc-bg{transform:scale(1.08)}
+.wc-shine{position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.14) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .8s var(--ease)}
+.work-card:hover .wc-shine{transform:translateX(120%)}
+.wc-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,4,5,.92) 0%,rgba(4,4,5,.15) 55%,transparent 80%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:22px;
+}
+.wc-cat{font-family:var(--font-m);font-size:.62rem;letter-spacing:.08em;color:var(--accent-2);text-transform:uppercase;margin-bottom:6px}
+.wc-title{font-size:1.12rem;font-weight:600;letter-spacing:-.01em}
+.wc-play{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;
+  background:rgba(10,10,10,.4);backdrop-filter:blur(6px);opacity:0;transform:translateY(-6px);transition:all .35s var(--ease)}
+.work-card:hover .wc-play{opacity:1;transform:translateY(0)}
+.wc-play svg{width:14px;height:14px}
+
+/* category gradient palette */
+.g-yt{background:linear-gradient(140deg,#3a0d0d,#1a1a1d 70%)}
+.g-social{background:linear-gradient(140deg,#241a3a,#1a1a1d 70%)}
+.g-logo{background:linear-gradient(140deg,#3a2a0d,#1a1a1d 70%)}
+.g-video{background:linear-gradient(140deg,#0d2a3a,#1a1a1d 70%)}
+.g-vfx{background:linear-gradient(140deg,#1c3a0d,#1a1a1d 70%)}
+
+/* ============================= THUMBNAIL SHOWCASE (masonry) ============================= */
+#thumbs{border-top:1px solid var(--line)}
+.masonry{columns:3 260px;column-gap:20px;margin-top:44px}
+@media(max-width:780px){.masonry{columns:2 200px}}
+@media(max-width:480px){.masonry{columns:1}}
+.tcard{
+  break-inside:avoid;margin-bottom:20px;border-radius:12px;overflow:hidden;position:relative;
+  border:1px solid var(--line);background:var(--panel);
+}
+.tcard img{width:100%;height:100%;object-fit:cover;display:block}
+.tcard .ph{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.tcard .ph .big{font-weight:700;font-size:1.4rem;text-transform:uppercase;text-align:center;padding:14px;line-height:1.1;letter-spacing:-.01em;position:relative;z-index:2}
+.tcard .ph::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55),transparent 60%)}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-family:var(--font-m);font-size:.62rem;color:var(--text-dimmer);letter-spacing:.05em;text-transform:uppercase}
+.tcard .meta b{color:var(--accent-2);font-weight:500}
+.tcard:nth-child(1) .ph{aspect-ratio:16/9}
+.tcard:nth-child(2) .ph{aspect-ratio:4/5}
+.tcard:nth-child(3) .ph{aspect-ratio:1/1}
+.tcard:nth-child(4) .ph{aspect-ratio:16/9}
+.tcard:nth-child(5) .ph{aspect-ratio:4/5}
+.tcard:nth-child(6) .ph{aspect-ratio:16/9}
+.tcard:nth-child(7) .ph{aspect-ratio:1/1}
+
+/* ============================= SHORT FORM ============================= */
+#shorts{border-top:1px solid var(--line);overflow:hidden}
+.reel-row{display:flex;gap:18px;overflow-x:auto;padding:8px 4px 24px;margin-top:44px;scroll-snap-type:x mandatory;
+  scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.reel-row::-webkit-scrollbar{height:6px}
+.reel-row::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+.reel-card{
+  flex:0 0 auto;width:240px;aspect-ratio:9/16;border-radius:16px;overflow:hidden;position:relative;
+  border:1px solid var(--line);scroll-snap-align:start;background:var(--panel);
+}
+@media(max-width:560px){.reel-card{width:200px}}
+.reel-card video, .reel-card .rc-ph{width:100%;height:100%;object-fit:cover}
+.reel-card .rc-ph{display:flex;align-items:center;justify-content:center;position:relative}
+.rc-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75) 0%,transparent 45%,rgba(0,0,0,.25) 100%);
+  display:flex;flex-direction:column;justify-content:space-between;padding:16px}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start}
+.rc-platform{font-family:var(--font-m);font-size:.6rem;letter-spacing:.08em;padding:5px 9px;border-radius:100px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);text-transform:uppercase}
+.rc-play{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.4);
+  display:flex;align-items:center;justify-content:center;align-self:center;margin:auto;
+  background:rgba(10,10,10,.35);backdrop-filter:blur(4px);transition:transform .3s var(--ease)}
+.reel-card:hover .rc-play{transform:scale(1.12)}
+.rc-play svg{width:16px;height:16px}
+.rc-bottom b{display:block;font-size:.92rem;font-weight:600;margin-bottom:2px}
+.rc-bottom span{font-family:var(--font-m);font-size:.6rem;color:var(--text-dim);letter-spacing:.05em}
+
+/* ============================= SKILLS ============================= */
+#skills{border-top:1px solid var(--line)}
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px 70px;margin-top:50px}
+@media(max-width:780px){.skills-wrap{grid-template-columns:1fr}}
+.skill-row{margin-bottom:26px}
+.skill-row:last-child{margin-bottom:0}
+.skill-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.skill-top b{font-size:.98rem;font-weight:500}
+.skill-top span{font-family:var(--font-m);font-size:.72rem;color:var(--accent-2)}
+.meter-track{position:relative;height:8px;background:var(--panel-2);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.meter-track .fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 1.4s var(--ease)}
+.meter-track .ticks{position:absolute;inset:0;display:flex;justify-content:space-between;pointer-events:none}
+.meter-track .ticks i{width:1px;background:rgba(0,0,0,.35)}
+
+/* ============================= SERVICES ============================= */
+#services{border-top:1px solid var(--line)}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+@media(max-width:900px){.services-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.services-grid{grid-template-columns:1fr}}
+.svc-card{
+  padding:30px 26px;border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.005));
+  backdrop-filter:blur(10px);position:relative;overflow:hidden;transition:border-color .35s,transform .35s var(--ease);
+}
+.svc-card:hover{border-color:var(--accent-line);transform:translateY(-5px)}
+.svc-num{font-family:var(--font-m);font-size:.68rem;color:var(--text-dimmer);letter-spacing:.08em;margin-bottom:20px;display:block}
+.svc-icon{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line);
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.svc-icon svg{width:18px;height:18px;color:var(--accent-2)}
+.svc-card h3{font-size:1.12rem;font-weight:600;margin-bottom:9px;letter-spacing:-.01em}
+.svc-card p{color:var(--text-dim);font-size:.9rem;font-weight:300}
+
+/* ============================= TESTIMONIALS ============================= */
+#reviews{border-top:1px solid var(--line)}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+@media(max-width:900px){.rev-grid{grid-template-columns:1fr}}
+.rev-card{
+  padding:28px 26px;border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.005));backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;gap:18px;
+}
+.rev-stars{font-family:var(--font-m);color:var(--accent-2);font-size:.85rem;letter-spacing:.12em}
+.rev-quote{color:var(--text-dim);font-size:.95rem;font-weight:300;line-height:1.65;flex:1}
+.rev-who{display:flex;align-items:center;gap:12px;padding-top:14px;border-top:1px solid var(--line)}
+.rev-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,var(--accent),#7a2e0f);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;font-weight:700;color:#0a0a0a}
+.rev-who b{display:block;font-size:.88rem;font-weight:600}
+.rev-who span{font-family:var(--font-m);font-size:.64rem;color:var(--text-dimmer);letter-spacing:.05em}
+
+/* ============================= CONTACT ============================= */
+#contact{border-top:1px solid var(--line)}
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;margin-top:50px}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr;gap:44px}}
+.clink-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.clink{
+  display:flex;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid var(--line);
+  transition:background .3s;
+}
+.clink:last-child{border-bottom:none}
+.clink:hover{background:var(--panel)}
+.clink .ci{width:36px;height:36px;border-radius:9px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.clink .ci svg{width:16px;height:16px;color:var(--accent-2)}
+.clink .ct{flex:1}
+.clink .ct b{display:block;font-size:.94rem;font-weight:500}
+.clink .ct span{font-family:var(--font-m);font-size:.68rem;color:var(--text-dimmer)}
+.clink .arrow{width:14px;height:14px;color:var(--text-dimmer);transition:transform .3s var(--ease)}
+.clink:hover .arrow{transform:translate(3px,-3px);color:var(--accent)}
+
+.panel-form{
+  border:1px solid var(--line);border-radius:var(--radius);padding:32px;
+  background:linear-gradient(160deg,rgba(255,255,255,.03),rgba(255,255,255,.005));backdrop-filter:blur(10px);
+}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;
+  font-family:var(--font-m);font-size:.66rem;letter-spacing:.08em;color:var(--text-dimmer);text-transform:uppercase}
+.panel-head b{color:#3ddc6a}
+.field{margin-bottom:18px}
+.field label{display:block;font-family:var(--font-m);font-size:.66rem;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px}
+.field input,.field textarea,.field select{
+  width:100%;background:var(--bg-1);border:1px solid var(--line-strong);border-radius:8px;padding:13px 14px;
+  color:var(--text);font-size:.92rem;transition:border-color .3s;
+}
+.field select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%239a9aa1'/></svg>");background-repeat:no-repeat;background-position:right 14px center}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:100px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.field-row{grid-template-columns:1fr}}
+.submit-btn{
+  width:100%;margin-top:6px;padding:16px;border-radius:8px;background:var(--accent);color:#0a0a0a;
+  font-family:var(--font-m);font-weight:600;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+  position:relative;overflow:hidden;transition:transform .3s var(--ease);
+}
+.submit-btn:hover{transform:translateY(-2px)}
+.submit-btn .prog{position:absolute;left:0;bottom:0;top:0;width:0;background:rgba(0,0,0,.15);transition:width .6s var(--ease)}
+.submit-btn:hover .prog{width:100%}
+.form-note{font-family:var(--font-m);font-size:.62rem;color:var(--text-dimmer);margin-top:12px;text-align:center;letter-spacing:.04em}
+
+/* ============================= FOOTER ============================= */
+footer{border-top:1px solid var(--line);padding:50px 0 40px}
+.foot-row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot-brand{font-family:var(--font-m);font-weight:700;font-size:.95rem}
+.foot-brand span{color:var(--accent)}
+.foot-tc{font-family:var(--font-m);font-size:.68rem;color:var(--text-dimmer);letter-spacing:.06em}
+.foot-social{display:flex;gap:16px}
+.foot-social a{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.3s}
+.foot-social a:hover{border-color:var(--accent);color:var(--accent-2)}
+.foot-social svg{width:15px;height:15px}
+.back-top{display:flex;align-items:center;gap:8px;font-family:var(--font-m);font-size:.68rem;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase}
+.back-top svg{width:14px;height:14px}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============================= TIMELINE / NAV ============================= -->
+<div id="timeline">
+  <div class="tl-nav wrap" style="padding:0 24px;max-width:none">
+    <div class="tl-logo">SANKALP<span>.</span></div>
+    <div class="tl-mid">
+      <nav class="tl-links" id="tl-links">
+        <a href="#about" data-sec="about">About</a>
+        <a href="#work" data-sec="work">Work</a>
+        <a href="#thumbs" data-sec="thumbs">Thumbnails</a>
+        <a href="#shorts" data-sec="shorts">Reels</a>
+        <a href="#skills" data-sec="skills">Skills</a>
+        <a href="#services" data-sec="services">Services</a>
+        <a href="#contact" data-sec="contact">Contact</a>
+      </nav>
+      <div class="tl-rec"><i></i>REC</div>
+      <div class="tl-tc" id="tc-display">00:00:00:00</div>
+      <button class="tl-burger" id="burger" aria-label="Open menu"><span></span></button>
+    </div>
+  </div>
+  <div class="tl-track">
+    <div class="rail" id="rail">
+      <div class="fill" id="tl-fill"></div>
+      <div class="head" id="tl-head"></div>
+      <!-- markers injected by JS -->
+    </div>
+  </div>
+</div>
+
+<div id="mobile-menu">
+  <button class="mm-close" id="mm-close">CLOSE ✕</button>
+  <a href="#about">About</a>
+  <a href="#work">Work</a>
+  <a href="#thumbs">Thumbnails</a>
+  <a href="#shorts">Reels</a>
+  <a href="#skills">Skills</a>
+  <a href="#services">Services</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- ============================= HERO ============================= -->
+<header id="hero">
+  <div class="hero-bg">
+    <div class="hero-glow"></div>
+    <div class="scanlines"></div>
+  </div>
+  <div class="frame-corners"><i></i><i></i><i></i><i></i></div>
+  <div class="meter"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="wrap hero-inner">
+    <div class="hero-eyebrow"><i></i>Available for freelance work — Pune, India</div>
+    <h1 class="headline">
+      <span class="line"><span>Graphic Designer</span></span>
+      <span class="line"><span>&amp; Video Editor</span></span>
+    </h1>
+    <p class="hero-sub">Helping brands, creators, and businesses build attention-grabbing visuals — from thumbnails that get the click to edits that hold the watch.</p>
+    <div class="hero-ctas">
+      <a href="#work" class="btn btn-primary">View My Work
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+      </a>
+      <a href="#contact" class="btn btn-outline">Contact Me</a>
+    </div>
+    <div class="hero-stats">
+      <div><b>2+</b><span>Years Freelancing</span></div>
+      <div><b>7+</b><span>Thumbnails Shipped</span></div>
+      <div><b>Pune</b><span>Based In / IST</span></div>
+      <div><b>VFX</b><span>Currently Studying</span></div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><div class="bar"></div><span>SCROLL</span></div>
+</header>
+
+<!-- ============================= ABOUT ============================= -->
+<section id="about">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 01 — About <span class="tc">00:00:12:00</span></div>
+    <h2 class="title reveal">The person behind the timeline.</h2>
+
+    <div class="about-grid">
+      <div class="viewfinder reveal">
+        <div class="vf-initials">SK</div>
+        <div class="vf-frame"><i></i><i></i><i></i><i></i></div>
+        <div class="vf-tag"><i></i>REC 00:00</div>
+        <div class="vf-mono">SANKALP<br>PUNE, IN</div>
+      </div>
+
+      <div class="about-text reveal">
+        <p>I'm Sankalp, a freelance graphic designer and video editor based in Pune, currently studying Animation &amp; VFX. For the past 2 years, I've been helping brands, creators, and businesses build stronger visual presence through design.</p>
+        <p>My work mainly focuses on YouTube thumbnails, social media creatives, logo design, and video editing — creating content that not only looks good but also grabs attention and communicates clearly.</p>
+        <p>Alongside freelance work, I'm expanding my skills in VFX, 3D, and animation, exploring new ways to blend design with motion and storytelling. I'm always focused on improving, experimenting, and building work that stands out in the creative space.</p>
+
+        <div class="about-facts">
+          <div><b>Pune, India</b><span>Based In</span></div>
+          <div><b>2 Years</b><span>Freelance Exp.</span></div>
+          <div><b>Animation &amp; VFX</b><span>Currently Studying</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= PORTFOLIO / WORK ============================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="work-head">
+      <div>
+        <div class="eyebrow reveal">Scene 02 — Selected Work <span class="tc">00:00:38:00</span></div>
+        <h2 class="title reveal">A reel of recent projects.</h2>
+      </div>
+      <div class="filters reveal" id="filters">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="yt">YouTube Thumbnails</button>
+        <button class="filter-chip" data-filter="social">Social Media</button>
+        <button class="filter-chip" data-filter="logo">Logo Design</button>
+        <button class="filter-chip" data-filter="video">Video Editing</button>
+        <button class="filter-chip" data-filter="vfx">VFX &amp; 3D</button>
+      </div>
+    </div>
+
+    <div class="work-grid" id="work-grid">
+      <!-- items injected by JS from PROJECTS array -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================= THUMBNAIL SHOWCASE ============================= -->
+<section id="thumbs">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 03 — Thumbnail Showcase <span class="tc">00:01:04:00</span></div>
+    <h2 class="title reveal">Built to earn the click.</h2>
+    <p class="lede reveal">High-performing YouTube thumbnails — bold type, clear focal points, colour that cuts through a crowded feed. Drop your own files into <code>assets/thumbnails/</code> and they'll appear here automatically.</p>
+
+    <div class="masonry" id="masonry"><!-- injected --></div>
+  </div>
+</section>
+
+<!-- ============================= SHORT FORM ============================= -->
+<section id="shorts">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 04 — Short Form <span class="tc">00:01:31:00</span></div>
+    <h2 class="title reveal">Reels, Shorts &amp; TikTok edits.</h2>
+    <p class="lede reveal">Vertical edits built for retention — sharp cuts, motion type, and hooks in the first second. Hover to preview.</p>
+  </div>
+  <div class="wrap"><div class="reel-row" id="reel-row"><!-- injected --></div></div>
+</section>
+
+<!-- ============================= SKILLS ============================= -->
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 05 — Toolkit <span class="tc">00:01:58:00</span></div>
+    <h2 class="title reveal">Levels, tuned by hand.</h2>
+
+    <div class="skills-wrap" id="skills-wrap"><!-- injected --></div>
+  </div>
+</section>
+
+<!-- ============================= SERVICES ============================= -->
+<section id="services">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 06 — Services <span class="tc">00:02:20:00</span></div>
+    <h2 class="title reveal">What I can make for you.</h2>
+
+    <div class="services-grid" id="services-grid"><!-- injected --></div>
+  </div>
+</section>
+
+<!-- ============================= TESTIMONIALS ============================= -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 07 — Client Notes <span class="tc">00:02:44:00</span></div>
+    <h2 class="title reveal">What clients are saying.</h2>
+
+    <div class="rev-grid" id="rev-grid"><!-- injected --></div>
+  </div>
+</section>
+
+<!-- ============================= CONTACT ============================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow reveal">Scene 08 — Contact <span class="tc">00:03:00:00</span></div>
+    <h2 class="title reveal">Let's cut something great together.</h2>
+    <p class="lede reveal">Have a project in mind? Send the brief through, or reach out directly — I usually reply within a day.</p>
+
+    <div class="contact-grid">
+      <div class="clink-list reveal" id="clink-list"><!-- injected --></div>
+
+      <form class="panel-form reveal" id="inquiry-form">
+        <div class="panel-head">Project Inquiry <b>● Ready</b></div>
+        <div class="field-row">
+          <div class="field"><label for="f-name">Name</label><input id="f-name" type="text" placeholder="Your name" required></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="you@email.com" required></div>
+        </div>
+        <div class="field">
+          <label for="f-type">Project Type</label>
+          <select id="f-type">
+            <option>YouTube Thumbnail</option>
+            <option>Social Media Design</option>
+            <option>Logo Design</option>
+            <option>Video Editing</option>
+            <option>Reels Editing</option>
+            <option>VFX / Motion Graphics</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-msg">Message</label><textarea id="f-msg" placeholder="Tell me a bit about your project..." required></textarea></div>
+        <button type="submit" class="submit-btn"><span class="prog"></span>Send Inquiry</button>
+        <div class="form-note" id="form-note">Opens your email client with the brief pre-filled.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-brand">SANKALP<span>.</span></div>
+    <div class="foot-tc">00:03:00:00 — END OF REEL — © <span id="year"></span></div>
+    <div class="foot-social" id="foot-social"><!-- injected --></div>
+    <a href="#hero" class="back-top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      Back to top
+    </a>
+  </div>
+</footer>
+
+<script>
+/* ============================= ICONS ============================= */
+const ICON = {
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6l9 7 9-7M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>',
+  insta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>',
+  linkedin:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.4h-3.5v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 3v5.5H9.5V9h3.4v1.6h.05c.5-.9 1.6-1.8 3.3-1.8 3.6 0 4.2 2.4 4.2 5.4v6.2zM5.3 7.4A2 2 0 1 1 5.3 3.4a2 2 0 0 1 0 4zM7 20.4H3.6V9H7v11.4z"/></svg>',
+  whatsapp:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8 1-.2.2-.3.2-.5.1-.2-.1-1.1-.4-2-1.3-.8-.7-1.3-1.6-1.4-1.9-.2-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3z"/></svg>',
+  thumb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M9.5 9l5.5 3-5.5 3z" fill="currentColor" stroke="none"/></svg>',
+  layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/></svg>',
+  logo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg>',
+  scissors:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.5 15.5M20 20L8.5 8.5"/></svg>',
+  film:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="3.5" width="19" height="17" rx="2"/><path d="M7 3.5v17M17 3.5v17M2.5 8h4.5M17 8h4.5M2.5 16h4.5M17 16h4.5"/></svg>',
+  cube:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>'
+};
+
+/* ============================= DATA ============================= */
+const PROJECTS = [
+  {cat:'yt', catLabel:'YouTube Thumbnails', title:'Tech Review Series', grad:'g-yt'},
+  {cat:'social', catLabel:'Social Media', title:'Brand Launch Carousel', grad:'g-social'},
+  {cat:'logo', catLabel:'Logo Design', title:'Studio Wordmark', grad:'g-logo'},
+  {cat:'video', catLabel:'Video Editing', title:'Founder Interview Cut', grad:'g-video'},
+  {cat:'vfx', catLabel:'VFX & 3D', title:'Product Reveal Render', grad:'g-vfx'},
+  {cat:'yt', catLabel:'YouTube Thumbnails', title:'Gaming Highlights Pack', grad:'g-yt'},
+  {cat:'social', catLabel:'Social Media', title:'Reel Cover Set', grad:'g-social'},
+  {cat:'video', catLabel:'Video Editing', title:'Event Recap Edit', grad:'g-video'},
+  {cat:'vfx', catLabel:'VFX & 3D', title:'Logo Sting Animation', grad:'g-vfx'},
+];
+
+const THUMB_TITLES = [
+  "I TRIED THIS FOR 30 DAYS","THE TRUTH NOBODY TELLS YOU","THIS CHANGES EVERYTHING",
+  "WORTH THE HYPE?","MY HONEST REACTION","STOP DOING THIS","BEFORE vs AFTER"
+];
+
+const REELS = [
+  {tag:'Instagram Reels', title:'Product Hook Edit'},
+  {tag:'YouTube Shorts', title:'Behind the Cut'},
+  {tag:'TikTok', title:'Fast Trend Edit'},
+  {tag:'Instagram Reels', title:'Before / After'}
+];
+
+const SKILLS = [
+  {name:'Photoshop', level:92},
+  {name:'Illustrator', level:85},
+  {name:'Premiere Pro', level:90},
+  {name:'After Effects', level:80},
+  {name:'Blender', level:62},
+  {name:'DaVinci Resolve', level:75}
+];
+
+const SERVICES = [
+  {icon:'thumb', title:'Thumbnail Design', desc:'High-CTR YouTube thumbnails built around a clear focal point and bold type.'},
+  {icon:'layers', title:'Social Media Design', desc:'On-brand posts, carousels and story sets designed to stop the scroll.'},
+  {icon:'logo', title:'Logo Design', desc:'Simple, memorable marks that hold up from a favicon to a billboard.'},
+  {icon:'film', title:'Video Editing', desc:'Clean narrative edits for interviews, YouTube videos and brand content.'},
+  {icon:'scissors', title:'Reels Editing', desc:'Fast-paced vertical edits built for retention on Reels, Shorts and TikTok.'},
+  {icon:'cube', title:'VFX & Motion Graphics', desc:'Motion type, transitions and 3D elements that add polish and punch.'}
+];
+
+const REVIEWS = [
+  {stars:'★★★★★', quote:'Sankalp turned our channel around — CTR went up noticeably within the first week of using his thumbnails.', name:'R. Mehta', role:'YouTube Creator, Tech'},
+  {stars:'★★★★★', quote:'Fast turnaround, clean edits, and he actually understands pacing for short-form. Exactly what our brand needed.', name:'A. Kulkarni', role:'Marketing Lead, D2C Brand'},
+  {stars:'★★★★★', quote:'Gave us a logo that felt custom, not templated. Communicative throughout and easy to work with.', name:'S. Fernandes', role:'Founder, Studio Client'}
+];
+
+const CONTACT_LINKS = [
+  {icon:'mail', label:'Email', value:'hello@sankalp.design', href:'mailto:hello@sankalp.design'},
+  {icon:'insta', label:'Instagram', value:'@sankalp.edits', href:'https://instagram.com/'},
+  {icon:'linkedin', label:'LinkedIn', value:'/in/sankalp', href:'https://linkedin.com/'},
+  {icon:'whatsapp', label:'WhatsApp', value:'Chat directly', href:'https://wa.me/'}
+];
+
+/* ============================= RENDER: PROJECTS ============================= */
+const workGrid = document.getElementById('work-grid');
+workGrid.innerHTML = PROJECTS.map(p => `
+  <div class="work-card" data-cat="${p.cat}">
+    <div class="wc-bg ${p.grad}"></div>
+    <div class="wc-shine"></div>
+    <div class="wc-play">${ICON.play}</div>
+    <div class="wc-overlay">
+      <div class="wc-cat">${p.catLabel}</div>
+      <div class="wc-title">${p.title}</div>
+    </div>
+  </div>
+`).join('');
+
+document.getElementById('filters').addEventListener('click', e=>{
+  const btn = e.target.closest('.filter-chip');
+  if(!btn) return;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  const f = btn.dataset.filter;
+  document.querySelectorAll('.work-card').forEach(card=>{
+    card.classList.toggle('hide', f!=='all' && card.dataset.cat!==f);
+  });
+});
+
+/* ============================= RENDER: THUMBNAIL MASONRY (assets/thumbnails/1..7) ============================= */
+const masonry = document.getElementById('masonry');
+const THUMB_GRADS = ['g-yt','g-vfx','g-social','g-video','g-logo','g-yt','g-social'];
+masonry.innerHTML = THUMB_TITLES.map((t,i)=>`
+  <div class="tcard">
+    <img src="assets/thumbnails/${i+1}.jpg" alt="${t}" loading="lazy"
+      onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph ${THUMB_GRADS[i]}',innerHTML:'<span class=big>${t}</span>'}))">
+    <div class="meta"><span>Thumbnail 0${i+1}</span><b>YouTube</b></div>
+  </div>
+`).join('');
+
+/* ============================= RENDER: REELS (assets/reels/1..4.mp4) ============================= */
+const reelRow = document.getElementById('reel-row');
+reelRow.innerHTML = REELS.map((r,i)=>`
+  <div class="reel-card">
+    <video src="assets/reels/${i+1}.mp4" muted loop playsinline preload="metadata"
+      onmouseenter="this.play()" onmouseleave="this.pause()"
+      onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'rc-ph g-video'}))"></video>
+    <div class="rc-overlay">
+      <div class="rc-top"><span class="rc-platform">${r.tag}</span></div>
+      <div class="rc-play">${ICON.play}</div>
+      <div class="rc-bottom"><b>${r.title}</b><span>Hover to preview</span></div>
+    </div>
+  </div>
+`).join('');
+
+/* ============================= RENDER: SKILLS ============================= */
+const skillsWrap = document.getElementById('skills-wrap');
+skillsWrap.innerHTML = SKILLS.map(s=>`
+  <div class="skill-row" data-level="${s.level}">
+    <div class="skill-top"><b>${s.name}</b><span>${s.level}%</span></div>
+    <div class="meter-track"><div class="fill"></div>
+      <div class="ticks">${'<i></i>'.repeat(20)}</div>
+    </div>
+  </div>
+`).join('');
+
+/* ============================= RENDER: SERVICES ============================= */
+const servicesGrid = document.getElementById('services-grid');
+servicesGrid.innerHTML = SERVICES.map((s,i)=>`
+  <div class="svc-card">
+    <span class="svc-num">0${i+1}</span>
+    <div class="svc-icon">${ICON[s.icon]}</div>
+    <h3>${s.title}</h3>
+    <p>${s.desc}</p>
+  </div>
+`).join('');
+
+/* ============================= RENDER: REVIEWS ============================= */
+const revGrid = document.getElementById('rev-grid');
+revGrid.innerHTML = REVIEWS.map(r=>`
+  <div class="rev-card">
+    <div class="rev-stars">${r.stars}</div>
+    <p class="rev-quote">"${r.quote}"</p>
+    <div class="rev-who">
+      <div class="rev-avatar">${r.name.split(' ').map(n=>n[0]).join('')}</div>
+      <div><b>${r.name}</b><span>${r.role}</span></div>
+    </div>
+  </div>
+`).join('');
+
+/* ============================= RENDER: CONTACT LINKS ============================= */
+const clinkList = document.getElementById('clink-list');
+clinkList.innerHTML = CONTACT_LINKS.map(c=>`
+  <a class="clink" href="${c.href}" target="_blank" rel="noopener">
+    <div class="ci">${ICON[c.icon]}</div>
+    <div class="ct"><b>${c.label}</b><span>${c.value}</span></div>
+    <div class="arrow">${ICON.arrow}</div>
+  </a>
+`).join('');
+
+document.getElementById('foot-social').innerHTML = CONTACT_LINKS.filter(c=>c.icon!=='mail').map(c=>`
+  <a href="${c.href}" target="_blank" rel="noopener" aria-label="${c.label}">${ICON[c.icon]}</a>
+`).join('');
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============================= FORM ============================= */
+document.getElementById('inquiry-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('f-name').value;
+  const email = document.getElementById('f-email').value;
+  const type = document.getElementById('f-type').value;
+  const msg = document.getElementById('f-msg').value;
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nProject type: ${type}\n\n${msg}`);
+  window.location.href = `mailto:hello@sankalp.design?subject=${encodeURIComponent('Project Inquiry — '+type)}&body=${body}`;
+  document.getElementById('form-note').textContent = 'Opening your email client...';
+});
+
+/* ============================= TIMELINE SCRUBBER ============================= */
+const SECTIONS = ['hero','about','work','thumbs','shorts','skills','services','reviews','contact'];
+const rail = document.getElementById('rail');
+const fill = document.getElementById('tl-fill');
+const head = document.getElementById('tl-head');
+const tcDisplay = document.getElementById('tc-display');
+const navLinks = document.querySelectorAll('.tl-links a');
+
+// build markers
+SECTIONS.slice(1).forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  const marker = document.createElement('div');
+  marker.className='tl-marker';
+  marker.dataset.target = id;
+  marker.innerHTML = `<span>${id}</span>`;
+  marker.addEventListener('click', ()=> el.scrollIntoView({behavior:'smooth'}));
+  rail.appendChild(marker);
+});
+
+function positionMarkers(){
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  document.querySelectorAll('.tl-marker').forEach(m=>{
+    const el = document.getElementById(m.dataset.target);
+    if(!el) return;
+    const pct = Math.min(100, (el.offsetTop / total) * 100);
+    m.style.left = pct + '%';
+  });
+}
+
+const TOTAL_FRAMES_PER_SEC = 24;
+const TOTAL_SECONDS = 180; // fictional 3-minute reel mapped to full scroll
+
+function frameTC(progress){
+  const totalFrames = Math.round(progress * TOTAL_SECONDS * TOTAL_FRAMES_PER_SEC);
+  const ff = totalFrames % TOTAL_FRAMES_PER_SEC;
+  const totalSec = Math.floor(totalFrames / TOTAL_FRAMES_PER_SEC);
+  const ss = totalSec % 60;
+  const mm = Math.floor(totalSec / 60) % 60;
+  const hh = Math.floor(totalSec / 3600);
+  const pad = n => String(n).padStart(2,'0');
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}:${pad(ff)}`;
+}
+
+let ticking = false;
+function updateTimeline(){
+  const scrollTop = window.scrollY;
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = total > 0 ? Math.min(1, Math.max(0, scrollTop/total)) : 0;
+  fill.style.width = (progress*100)+'%';
+  head.style.left = (progress*100)+'%';
+  tcDisplay.innerHTML = frameTC(progress) + (progress>0.001 ? '' : '');
+
+  // active nav section
+  let current = SECTIONS[0];
+  for(const id of SECTIONS){
+    const el = document.getElementById(id);
+    if(!el) continue;
+    if(el.offsetTop - 120 <= scrollTop) current = id;
+  }
+  navLinks.forEach(a=> a.classList.toggle('active', a.dataset.sec===current));
+  ticking = false;
+}
+
+window.addEventListener('scroll', ()=>{
+  if(!ticking){ requestAnimationFrame(updateTimeline); ticking = true; }
+}, {passive:true});
+window.addEventListener('resize', ()=>{ positionMarkers(); updateTimeline(); });
+
+/* ============================= MOBILE MENU ============================= */
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobile-menu');
+burger.addEventListener('click', ()=> mobileMenu.classList.add('open'));
+document.getElementById('mm-close').addEventListener('click', ()=> mobileMenu.classList.remove('open'));
+mobileMenu.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mobileMenu.classList.remove('open')));
+
+/* ============================= SCROLL REVEAL ============================= */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);
+    }
+  });
+}, {threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+/* skills bars fill on view */
+const skillIo = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const level = entry.target.dataset.level;
+      entry.target.querySelector('.fill').style.width = level+'%';
+      skillIo.unobserve(entry.target);
+    }
+  });
+}, {threshold:.4});
+document.querySelectorAll('.skill-row').forEach(el=> skillIo.observe(el));
+
+/* stagger groups: work grid, masonry, services, reviews, skills wrap */
+[workGrid, masonry, servicesGrid, revGrid, skillsWrap, reelRow].forEach(el=>{
+  el.classList.add('stagger');
+  io.observe(el);
+});
+
+/* init */
+window.addEventListener('load', ()=>{ positionMarkers(); updateTimeline(); });
+positionMarkers();
+updateTimeline();
+</script>
+</body>
+</html>
